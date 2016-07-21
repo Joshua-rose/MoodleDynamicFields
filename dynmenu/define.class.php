@@ -49,27 +49,14 @@ class profile_define_dynmenu extends profile_define_base {
 		//PARAM_TEXT equivalent is not needed. According to docs.moodle.org select, radio box and checkboxes do not need the cleanup function provided by settype
 		
 		//If Parent
-		$form->addElement('select', 'fielddynchildtype', 'Child Field Type'.get_string('blankchild','profilefield_dynmenu'), array("Not-Parent(i.e. Child without grandchildren)","Enable-Disable","Update","Enable-Update"));
+		$form->addElement('select', 'param3', 'Child Field Type'.get_string('blankchild','profilefield_dynmenu'), array("Not-Parent(i.e. Child without grandchildren)","Enable-Disable","Update","Enable-Update"));
 		//if child is update
-		$form->addElement('textarea', 'dynchildnames', 'Child Fields'.get_string('blankparent','profilefield_dynmenu').' (must match the options to work correctly)', array('rows' => 6, 'cols' => 40));
-        $form->setType('dynchildnames', PARAM_TEXT);
-		
-		//If Child
-		$form->addElement('text', 'dynparentshortname', 'Parent Field'.get_string('blankchild','profilefield_dynmenu'), 'size=50');
-		$form->setType('dynparentshortname',PARAM_TEXT);
-		
-		
-		////////If Enable/diable
-		$form->addElement('textarea', 'dyngrandchildnames', 'Grandchildren fields'.get_string('blankgrandchild','profilefield_dynmenu').' (must match the options to work correctly)'."\nEnable Field with Grandchildren", array('rows' => 6, 'cols' => 40));
-        $form->setType('dyngrandchildnames', PARAM_TEXT);
-		
+		$form->addElement('textarea', 'param4', 'Child Fields'.get_string('blankparent','profilefield_dynmenu').' (must match the options to work correctly [excludes update only children, for exclude only enter one value])', array('rows' => 6, 'cols' => 40));
+        $form->setType('param4', PARAM_TEXT);
 		
 		////////if update
-		$form->addElement('textarea', 'dynparentvalues', 'Enter the options of the parent field that cause update in this field'.get_string('blankchild','profilefield_dynmenu')."\nUpdateField", array('rows' => 6, 'cols' => 40));
-        $form->setType('dynparentvalues', PARAM_TEXT);
-		
-		$form->addElement('textarea', 'dynupdatedvalues', 'Enter the values that should correspond to the options of the parent field'.get_string('blankchild','profilefield_dynmenu')."\nUpdateField", array('rows' => 6, 'cols' => 40));
-        $form->setType('dynupdatedvalues', PARAM_TEXT);
+		$form->addElement('textarea', 'param5', 'Enter the options of the parent field values that cause update in this field'.get_string('blankchild','profilefield_dynmenu')."\nUpdateField", array('rows' => 6, 'cols' => 40));
+        $form->setType('param5', PARAM_TEXT);
 		
     }
 	/**
@@ -101,26 +88,26 @@ class profile_define_dynmenu extends profile_define_base {
         }
 		
 		//Validation of Custom Fields
-		if ($data->param2 == 0 && $data->fielddynchildtype == 1)
+		if ($data->param2 == 0 && $data->param3 == 1)
 		{
-			$data->dynchildnames = str_replace("\r", '', $data->dynchildnames);
+			$data->param4 = str_replace("\r", '', $data->param4);
 			$parentOptions = explode("\n", $data->param1);
-			if (($options = explode("\n", $data->dynchildnames)) === false) {
-				$err['dynchildnames'] = get_string('nooptions', 'profilefield_dynmenu');
+			if (($options = explode("\n", $data->param4)) === false) {
+				$err['param4'] = get_string('nooptions', 'profilefield_dynmenu');
 			} else if (count($options) != count($parentOptions)) {
-				$err['dynchildnames'] = get_string('wrongnumberoptions', 'profilefield_dynmenu');
+				$err['param4'] = get_string('wrongnumberoptions', 'profilefield_dynmenu');
 			}
 			
 		}
 		
 		//Verify Update-Field and MuiltiField do not have children
-		/*if ($data->param2 == 2 && $data->fielddynchildtype != 0)
+		/*if ($data->param2 == 2 && $data->param3 != 0)
 		{
-			$err['fielddynchildtype'] = get_string('updatedoesnotsupportchildren','profilefield_dynmenu');
+			$err['param3'] = get_string('updatedoesnotsupportchildren','profilefield_dynmenu');
 		}
-		else if  ($data->param2 == 3 && $data->fielddynchildtype != 0)
+		else if  ($data->param2 == 3 && $data->param3 != 0)
 		{
-			$err['fielddynchildtype'] = get_string('multidoesnotsupportchildren','profilefield_dynmenu');
+			$err['param3'] = get_string('multidoesnotsupportchildren','profilefield_dynmenu');
 		}*/
 		
 		
@@ -136,28 +123,27 @@ class profile_define_dynmenu extends profile_define_base {
     public function define_save_preprocess($data) {
 		echo 'Error is after define.class.php.loc 3 (line ~105)';
         $data->param1 = str_replace("\r", '', $data->param1);
-		$data->dynchildnames = str_replace("\r", '', $data->dynchildnames);
-		$data->dynparentvalues = str_replace("\r", '', $data->dynparentvalues);
+		$data->param4 = str_replace("\r", '', $data->param4);
+		$data->param5 = str_replace("\r", '', $data->param5);
 		//seperate data from the remaining fields
 		switch ($data->param2) {
 			case 0: //is Parent
-				$data->param3 = $data->fielddynchildtype;	
-				$data->param4 = $data->dynchildnames;
+				$data->param3 = $data->param3;	
+				$data->param4 = $data->param4;
 				break;
 			case 1: //is Enable/Disable
-				$data->param3 = $data->fielddynchildtype;
-				$data->param4 = $data->dynchildnames;
+				$data->param3 = $data->param3;
+				$data->param4 = $data->param4;
 				
 				break;
 			case 2: //is Update
-				$data->param3 = $data->dynparentshortname;
-				$data->param4 = $data->dynchildnames;
-				$data->param5 = $data->dynparentvalues;
+				$data->param4 = $data->param4;
+				$data->param5 = $data->param5;
 				break;
 			case 3: //is Multi
-				$data->param3 = $data->dynparentshortname;
-				$data->param4 = $data->dynchildnames;
-				$data->param5 = $data->dynparentvalues;
+				
+				$data->param4 = $data->param4;
+				$data->param5 = $data->param5;
 				break;
 		
 		}

@@ -172,7 +172,7 @@ class profile_field_dynmenu extends profile_field_base {
 					
 					//create the javascript function
 					$dynAddtnlJS .= "function update".$this->field->shortname."(parentName) {var triggerArray = []; updateValuesArray = [];\n";
-					/*echo 'triggers:'.count($triggers).'  dynValues:'.count($dynValues);*/
+					//echo 'triggers:'.count($triggers).'  dynValues:'.count($dynValues);
 					if (count($triggers) == count($dynValues))
 						{
 							for ($j=0;$j<count($triggers);$j++)
