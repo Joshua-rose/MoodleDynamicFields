@@ -9,7 +9,11 @@ class hideShow{
   exec(){
     var currentValue = document.querySelector(this.parent).value;
     var indexes = getAllIndexes(this.parentValues, currentValue);
-    this.childrenToShow.forEach(child => document.querySelector(FIELD_WRAPPER + child).setAttribute('aria-hidden', 'true'))
+    this.childrenToShow.forEach(child => {document.querySelector(FIELD_WRAPPER + child).setAttribute('aria-hidden', 'true');
+                                         document.querySelector(FIELD_PREFIX + child).value = "-1";
+                                         var event = new Event('change');
+                                          document.querySelector(FIELD_PREFIX + child).dispatchEvent(event);
+                                         })
     indexes.forEach(i => {
       document.querySelector(FIELD_WRAPPER + this.childrenToShow[i]).setAttribute('aria-hidden','false');
     });
