@@ -36,34 +36,33 @@ class profile_define_dynmenu extends profile_define_base {
      */
     public function define_form_specific($form) {
         // Param 1 for dynmenu type contains the options.
-		echo 'Error is after define.class.php.loc 1 (line ~39)';
-        $form->addElement('textarea', 'param1', get_string('profilemenuoptions', 'admin'), array('rows' => 6, 'cols' => 40));
+	      $form->addElement('textarea', 'param1', get_string('profilemenuoptions', 'admin'), array('rows' => 6, 'cols' => 40));
         $form->setType('param1', PARAM_TEXT);
 
         // Default data.
         $form->addElement('text', 'defaultdata', get_string('profiledefaultdata', 'admin'), 'size="50"');
         $form->setType('defaultdata', PARAM_TEXT);
-		
-		//Get Dynmenu Type
-		$form->addElement('select', 'param2', 'Dynamic Field Type', array("Parent","Enable-Disable","Update","Enable-Update"));
-		//PARAM_TEXT equivalent is not needed. According to docs.moodle.org select, radio box and checkboxes do not need the cleanup function provided by settype
-		
-		//If Parent
-		$form->addElement('select', 'param3', 'Child Field Type'.get_string('blankchild','profilefield_dynmenu'), array("Not-Parent(i.e. Child without grandchildren)","Enable-Disable","Update","Enable-Update"));
-		//if child is update
-		$form->addElement('textarea', 'param4', 'Child Fields'.get_string('blankparent','profilefield_dynmenu').' (must match the options to work correctly [excludes update only children, for exclude only enter one value])', array('rows' => 6, 'cols' => 40));
-        $form->setType('param4', PARAM_TEXT);
-		
+
+		   //Get Dynmenu Type
+		    $form->addElement('select', 'param2', 'Dynamic Field Type', array("Parent","Enable-Disable","Update","Enable-Update"));
+		  //PARAM_TEXT equivalent is not needed. According to docs.moodle.org select, radio box and checkboxes do not need the cleanup function provided by settype
+
+		  //If Parent
+		   $form->addElement('select', 'param3', 'Child Field Type', array("Not-Parent(i.e. Child without grandchildren)","Enable-Disable","Update","Enable-Update"));
+		   //if child is update
+		   $form->addElement('textarea', 'param4', 'Child Fields\n'.get_string('blankparent','profilefield_dynmenu').'\n (The options in this field MUST correspond to the'.get_string('profilemenuoptions', 'admin').' )', array('rows' => 6, 'cols' => 40));
+       $form->setType('param4', PARAM_TEXT);
+
 		////////if update
-		$form->addElement('textarea', 'param5', 'Enter the options of the parent field values that cause update in this field'.get_string('blankchild','profilefield_dynmenu')."\nUpdateField", array('rows' => 6, 'cols' => 40));
-        $form->setType('param5', PARAM_TEXT);
-		
+		  $form->addElement('textarea', 'param5', get_string('updatefieldinfo','profilefield_dynmenu'), array('rows' => 6, 'cols' => 40));
+      $form->setType('param5', PARAM_TEXT);
+
     }
 	/**
 	* Alters the form after it is defined with existing data
-	* @param mform &$form 
+	* @param mform &$form
 	*/
-	
+
 
     /**
      * Validates data for the profile field.
@@ -86,7 +85,7 @@ class profile_define_dynmenu extends profile_define_base {
             // Check the default data exists in the options.
             $err['defaultdata'] = get_string('profiledynmenudefaultnotinoptions', 'admin');
         }
-		
+
 		//Validation of Custom Fields
 		if ($data->param2 == 0 && $data->param3 == 1)
 		{
@@ -97,23 +96,8 @@ class profile_define_dynmenu extends profile_define_base {
 			} else if (count($options) != count($parentOptions)) {
 				$err['param4'] = get_string('wrongnumberoptions', 'profilefield_dynmenu');
 			}
-			
+
 		}
-		
-		//Verify Update-Field and MuiltiField do not have children
-		/*if ($data->param2 == 2 && $data->param3 != 0)
-		{
-			$err['param3'] = get_string('updatedoesnotsupportchildren','profilefield_dynmenu');
-		}
-		else if  ($data->param2 == 3 && $data->param3 != 0)
-		{
-			$err['param3'] = get_string('multidoesnotsupportchildren','profilefield_dynmenu');
-		}*/
-		
-		
-		var_dump($data);
-        return $err;
-    }
 
     /**
      * Processes data before it is saved.
@@ -124,34 +108,8 @@ class profile_define_dynmenu extends profile_define_base {
 		echo 'Error is after define.class.php.loc 3 (line ~105)';
         $data->param1 = str_replace("\r", '', $data->param1);
 		$data->param4 = str_replace("\r", '', $data->param4);
-		$data->param5 = str_replace("\r", '', $data->param5);
-		//seperate data from the remaining fields
-		switch ($data->param2) {
-			case 0: //is Parent
-				$data->param3 = $data->param3;	
-				$data->param4 = $data->param4;
-				break;
-			case 1: //is Enable/Disable
-				$data->param3 = $data->param3;
-				$data->param4 = $data->param4;
-				
-				break;
-			case 2: //is Update
-				$data->param4 = $data->param4;
-				$data->param5 = $data->param5;
-				break;
-			case 3: //is Multi
-				
-				$data->param4 = $data->param4;
-				$data->param5 = $data->param5;
-				break;
-		
-		}
-		
-		
+		$data->param5 = str_replace("\r", '', $data->param5);	
         return $data;
     }
 
 }
-
-
