@@ -78,12 +78,12 @@ class profile_define_dynmenu extends profile_define_base {
 
         // Check that we have at least 2 options.
         if (($options = explode("\n", $data->param1)) === false) {
-            $err['param1'] = get_string('profiledynmenunooptions', 'admin');
+            $err['param1'] = get_string('profilemenunooptions', 'admin');
         } else if (count($options) < 2) {
-            $err['param1'] = get_string('profiledynmenutoofewoptions', 'admin');
+            $err['param1'] = get_string('profilemenutoofewoptions', 'admin');
         } else if (!empty($data->defaultdata) and !in_array($data->defaultdata, $options)) {
             // Check the default data exists in the options.
-            $err['defaultdata'] = get_string('profiledynmenudefaultnotinoptions', 'admin');
+            $err['defaultdata'] = get_string('profilemenudefaultnotinoptions', 'admin');
         }
 
 		//Validation of Custom Fields
@@ -98,6 +98,7 @@ class profile_define_dynmenu extends profile_define_base {
 			}
 
 		}
+  }
 
     /**
      * Processes data before it is saved.
@@ -108,7 +109,7 @@ class profile_define_dynmenu extends profile_define_base {
 		echo 'Error is after define.class.php.loc 3 (line ~105)';
         $data->param1 = str_replace("\r", '', $data->param1);
 		$data->param4 = str_replace("\r", '', $data->param4);
-		$data->param5 = str_replace("\r", '', $data->param5);	
+		$data->param5 = str_replace("\r", '', $data->param5);
         return $data;
     }
 
