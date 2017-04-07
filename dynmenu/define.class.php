@@ -96,8 +96,8 @@ class profile_define_dynmenu extends profile_define_base {
 			} else if (count($options) != count($parentOptions)) {
 				$err['param4'] = get_string('wrongnumberoptions', 'profilefield_dynmenu');
 			}
-
 		}
+    return $err;
   }
 
     /**
