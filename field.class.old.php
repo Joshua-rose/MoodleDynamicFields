@@ -172,7 +172,7 @@ class profile_field_dynmenu extends profile_field_base {
 					
 					//create the javascript function
 					$dynAddtnlJS .= "function update".$this->field->shortname."(parentName) {var triggerArray = []; updateValuesArray = [];\n";
-					/*echo 'triggers:'.count($triggers).'  dynValues:'.count($dynValues);*/
+					//echo 'triggers:'.count($triggers).'  dynValues:'.count($dynValues);
 					if (count($triggers) == count($dynValues))
 						{
 							for ($j=0;$j<count($triggers);$j++)
@@ -384,6 +384,7 @@ class profile_field_dynmenu extends profile_field_base {
 				$js .= 'show'.$this->field->shortname.'Children();';
 				$js .= 'var runUpdate="";';
 				$js .= 'var params="";';
+				$js .= '$(this).runOnce = false;';
 				// code to be executed if Child Type is HideShow
 				
 				//create children array fromChildToShow
@@ -409,23 +410,25 @@ class profile_field_dynmenu extends profile_field_base {
 				}
 				$js .= "var isDisabled = $('#id_profile_field_".$this->field->shortname."').attr('disabled')\n";
 				$js .= "if(isDisabled === false || typeof isDisabled === typeof undefined){\n";
-				$js .= 'var compareTo = $("#id_profile_field_'.$this->field->shortname.'").val();'."\n";
-				//$js .= 'var child = "#id_profile_field_" + childrenArray[compareArray.indexOf(compareTo)];'."\n";
-				$js .=  'for (var j=0; j<childrenArray.length; j++){'."\n";
-				$js .=  'if (childrenArray[j] == childrenArray[compareArray.indexOf(compareTo)]) {'."\n";
-				$js .= '$("#id_profile_field_" +childrenArray[j]).prop("disabled", false);'."\n";
-				$js .=  "var updateA = 'update'; updateA=updateA.concat(childrenArray[j]);";
-				$js .= "params = '#id_profile_field_".$this->field->shortname."';";
-				$js .= "updateAction = updateA.concat(\"(params)\");";
-				$js .= "var temphold = $('#id_profile_field_".$this->field->shortname."').attr('onChange');";
-				$js .= "if (temphold.indexOf(updateAction) < 0){\n";
-				$js .= "$('#id_profile_field_".$this->field->shortname."').attr('onChange',temphold + ';'+updateAction);\n";
-				$js .= "runUpdate= window[updateA];\n";
-				$js .= "}}\n";
-				
-				
-				$js .= 'else {$("#id_profile_field_" +childrenArray[j]).prop("disabled", true); }}}}'."\n";
-				$js .= 'if (runUpdate != ""){ runUpdate(params);}';
+					
+					$js .= 'var compareTo = $("#id_profile_field_'.$this->field->shortname.'").val();'."\n";
+					//$js .= 'var child = "#id_profile_field_" + childrenArray[compareArray.indexOf(compareTo)];'."\n";
+					$js .=  'for (var j=0; j<childrenArray.length; j++){'."\n";
+						$js .=  'if (childrenArray[j] == childrenArray[compareArray.indexOf(compareTo)]) {'."\n";
+							$js .= '$("#id_profile_field_" +childrenArray[j]).prop("disabled", false);'."\n";
+							$js .=  "var updateA = 'update'; updateA=updateA.concat(childrenArray[j]);";
+							$js .= "params = '#id_profile_field_".$this->field->shortname."';";
+							$js .= "updateAction = updateA.concat(\"(params)\");";
+							$js .= "var temphold = $('#id_profile_field_".$this->field->shortname."').attr('onChange');";
+							$js .= "if (temphold.indexOf(updateAction) < 0){\n";
+								$js .= "$('#id_profile_field_".$this->field->shortname."').attr('onChange',temphold + ';'+updateAction);\n";
+								$js .= "with(window){window.eval(updateAction);}";
+						$js .= "}}\n";
+						
+						
+						$js .= 'else {$("#id_profile_field_" +childrenArray[j]).prop("disabled", true); }}'."\n";
+
+				$js .= "}}";
 				break;
 			Default:
 				//Should not be reached. No further action is needed.

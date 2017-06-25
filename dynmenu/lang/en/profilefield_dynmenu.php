@@ -23,8 +23,9 @@
  */
 
 $string['pluginname'] = 'Dynamic Dropdown menu';
-$string['blankchild'] = ' (Leave blank if not child field)';
-$string['blankparent'] = ' (Leave blank if not parent field)';
+$string['blankchild'] = ' Child field only (Leave blank otherwise)';
+$string['blankparent'] = ' Parent field only (Leave blank otherwise)';
 $string['blankgrandchild'] = ' (Leave blank if not enable/disable with children)';
+$string['updatefieldinfo'] = 'Update Field Triggers \n Enter the options of the parent field values that cause update in this field (Update Field only, leave blank otherwise)';
 $string['updatedoesnotsupportchildren'] = 'This Dynamic field type "Update Field" does not support children';
 $string['multidoesnotsupportchildren'] = 'This Dynamic field type "Enable/Disable/Update Field" does not support children';
