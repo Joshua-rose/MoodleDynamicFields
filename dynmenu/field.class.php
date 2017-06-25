@@ -50,8 +50,8 @@ class profile_field_dynmenu extends profile_field_base {
     /** @var array $triggerValues */
     public $triggerValues;
 
-    define('field_prefix', '#id_profile_field_');
-    define('field_wrapper', '#fitem_id_profile_field_');
+    public $field_prefix;
+    public $field_wrapper;
     /**
      * Constructor method.
      *
@@ -63,7 +63,7 @@ class profile_field_dynmenu extends profile_field_base {
     public function __construct($fieldid = 0, $userid = 0) {
         // First call parent constructor.
         parent::__construct($fieldid, $userid);
-
+        global $CFG;
         // Param 1 for dynmenu type is the options.
         if (isset($this->field->param1)) {
             $options = explode("\n", $this->field->param1);
@@ -120,14 +120,20 @@ class profile_field_dynmenu extends profile_field_base {
       if (!isset($CFG->additionalhtmlfooter)) {
    			$CFG->additionalhtmlfooter = '';
    		}
-      $CFG->additionalhtmlfooter .= dynmenu_add_javascript($fieldType);
-      $jsMin = "var _createClass=function(){function a(b,c){for(var e,d=0;d<c.length;d++)e=c[d],e.enumerable=e.enumerable||!1,e.configurable=!0,'value'in e&&(e.writable=!0),Object.defineProperty(b,e.key,e)}return function(b,c,d){return c&&a(b.prototype,c),d&&a(b,d),b}}();function _classCallCheck(a,b){if(!(a instanceof b))throw new TypeError('Cannot call a class as a function')}var FIELD_PREFIX='#id_profile_field_',FIELD_WRAPPER='#fitem_id_profile_field_',hideSho=function(){function a(b,c,d){_classCallCheck(this,a),this.parent=FIELD_PREFIX+b,this.parentValues=c,this.childrenToShow=d}return _createClass(a,[{key:'exec',value:function exec(){var d=this,b=document.querySelector(this.parent).value,c=getAllIndexes(this.parentValues,b);this.childrenToShow.forEach(function(e){document.querySelector(FIELD_WRAPPER+e).setAttribute('aria-hidden','true'),document.querySelector(FIELD_PREFIX+e).value='-1';var f=new Event('change');document.querySelector(FIELD_PREFIX+e).dispatchEvent(f)}),c.forEach(function(e){document.querySelector(FIELD_WRAPPER+d.childrenToShow[e]).setAttribute('aria-hidden','false')})}}]),a}(),update=function(){function a(b,c,d,e,f){_classCallCheck(this,a),this.parent=FIELD_PREFIX+b,this.currentField=FIELD_PREFIX+c,this.parentValues=d,this.childrenValues=e,this.selectPhrase=f||'Select'}return _createClass(a,[{key:'exec',value:function exec(){var f=this,b=document.querySelector(this.parent).value;if('-1'===b)return!1;var c=getAllIndexes(this.parentValues,b),d=c.map(function(g){return f.childrenValues[g]}),e=document.querySelector(this.currentField);e.innerHTML='<option value="-1">'+this.selectPhrase+'</option>',d.forEach(function(g){var h=document.createElement('option');h.text=g,h.value=g,e.add(h)})}}]),a}();function getAllIndexes(a,b){var d,c=[];for(d=0;d<a.length;d++)a[d]===b&&c.push(d);return c}";
+      $field_wrapper ='#fitem_id_profile_field_';
+      $field_prefix = '#id_profile_field_';
+
+      $CFG->additionalhtmlfooter .= $this->dynmenu_add_javascript($fieldType);
+      $jsMin = "var _createClass=function(){function a(b,c){for(var e,d=0;d<c.length;d++)e=c[d],e.enumerable=e.enumerable||!1,e.configurable=!0,'value'in e&&(e.writable=!0),Object.defineProperty(b,e.key,e)}return function(b,c,d){return c&&a(b.prototype,c),d&&a(b,d),b}}();function _classCallCheck(a,b){if(!(a instanceof b))throw new TypeError('Cannot call a class as a function')}var ".$field_prefix."='#id_profile_field_',".$field_wrapper."='#fitem_id_profile_field_',hideSho=function(){function";
+      $jsMin .= "a(b,c,d){_classCallCheck(this,a),this.parent=".$field_prefix."+b,this.parentValues=c,this.childrenToShow=d}return _createClass(a,[{key:'exec',value:function exec(){var d=this,b=document.querySelector(this.parent).value,c=getAllIndexes(this.parentValues,b);this.childrenToShow.forEach(function(e){document.querySelector(".$field_wrapper."+e).setAttribute('aria-hidden','true'),document.querySelector(".$field_prefix."+e).value='-1';var f=new";
+      $jsMin .= "Event('change');document.querySelector(".$field_prefix."+e).dispatchEvent(f)}),c.forEach(function(e){document.querySelector(".$field_wrapper."+d.childrenToShow[e]).setAttribute('aria-hidden','false')})}}]),a}(),update=function(){function a(b,c,d,e,f){_classCallCheck(this,a),this.parent=".$field_prefix."+b,this.currentField=".$field_prefix."+c,this.parentValues=d,this.childrenValues=e,this.selectPhrase=f||'Select'}return _createClass(a,[{key:'exec',value:function exec(){var";
+      $jsMin .= "f=this,b=document.querySelector(this.parent).value;if('-1'===b)return!1;var c=getAllIndexes(this.parentValues,b),d=c.map(function(g){return f.childrenValues[g]}),e=document.querySelector(this.currentField);e.innerHTML='<option value=\"-1\">'+this.selectPhrase+'</option>',d.forEach(function(g){var h=document.createElement('option');h.text=g,h.value=g,e.add(h)})}}]),a}();function getAllIndexes(a,b){var d,c=[];for(d=0;d<a.length;d++)a[d]===b&&c.push(d);return c}";
       if(strpos($CFG->additionalhtmlfooter, $jsMin) === false){
         $CFG->additionalhtmlfooter .= $jsMin;
       }
-
     }
 public function dynmenu_add_javascript($dyntype){
+  global $CFG;
   $js = '';
   //add javascript
   switch ($dyntype) {
@@ -147,8 +153,8 @@ public function dynmenu_add_javascript($dyntype){
       foreach ($CG->parentChildFields as $parent => $children) {
          foreach ($children as $key => $c) {
            if ($c == $this->field->shortname) {
-             $js .= 'dynmenu_update_field('.$parent.','.$this->field->shortname.', '.$triggerValues.','.$this->options.');'
-             break;
+             $js .= 'dynmenu_update_field('.$parent.','.$this->field->shortname.', '.$triggerValues.','.$this->options.');';
+             break 1;
            }
          }
       }
@@ -160,7 +166,7 @@ public function dynmenu_add_javascript($dyntype){
        foreach ($CG->parentChildFields as $parent => $children) {
           foreach ($children as $key => $c) {
             if ($c == $this->field->shortname) {
-              $js .= 'dynmenu_update_field('.$parent.','.$this->field->shortname.', '.$triggerValues.','.$this->options.');'
+              $js .= 'dynmenu_update_field('.$parent.','.$this->field->shortname.', '.$triggerValues.','.$this->options.');';
               break;
             }
           }
@@ -193,7 +199,7 @@ public function dynmenu_add_javascript($dyntype){
       }
       $dynJS .= '];\nvar show'.$fieldShortName.'Children = new hideShow(\''.$fieldShortName.'\',var paHS_'.$fieldShortName.',var caHS_'.$fieldShortName.');\n';
       $dynJS .= 'show'.$fieldShortName.'Children.exec()\n';
-      $dynJS .= 'document.querySelector('.field_prefix.$fieldShortName.').addEventListener(\'change\', function () {show'.$fieldShortName.'Children.exec();}';
+      $dynJS .= 'document.querySelector('.$field_prefix.$fieldShortName.').addEventListener(\'change\', function () {show'.$fieldShortName.'Children.exec();}';
       return $dynJS;
     }
 
@@ -206,7 +212,7 @@ public function dynmenu_add_javascript($dyntype){
     * @param string pt - placeholder text to be shown before selection
     * @return string $dynJS - javascript to power the update field functinality
     */
-    public function dynmenu_update_field($parentFieldShortName,$childFieldShortName,$parentValues,$childValues,$placeholderText = 'Select ...');
+    public function dynmenu_update_field($parentFieldShortName,$childFieldShortName,$parentValues,$childValues,$placeholderText = 'Select ...')
     {
       $dynJS = '';
       $dynJS .= 'var paHS_'.$childFieldShortName.' = [';
@@ -218,7 +224,7 @@ public function dynmenu_add_javascript($dyntype){
         $dynJS .= $cfv.', ';
       }
       $dynJS .= '];\nvar update'.$childFieldShortName.'_'.$parentFieldShortName.' = new update(\''.$parentFieldShortName.'\',\''.$childFieldShortName.'\',paHS_'.$childFieldShortName.',caHS_'.$childFieldShortName.','.$placeholderText.' )';
-      $dynJS .= 'document.querySelector('field_prefix.$parentFieldShortName.').addEventListener(\'change\', function () {update'.$childFieldShortName.'_'.$parentFieldShortName.'.exec();})';
+      $dynJS .= 'document.querySelector('.$field_prefix.$parentFieldShortName.').addEventListener(\'change\', function () {update'.$childFieldShortName.'_'.$parentFieldShortName.'.exec();})';
       return $dynJS;
     }
     /**
