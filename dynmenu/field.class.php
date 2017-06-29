@@ -63,7 +63,7 @@ class profile_field_dynmenu extends profile_field_base {
     public function __construct($fieldid = 0, $userid = 0) {
         // First call parent constructor.
         parent::__construct($fieldid, $userid);
-        global $CFG;
+        global $CFG, $childName;
         // Param 1 for dynmenu type is the options.
         if (isset($this->field->param1)) {
             $options = explode("\n", $this->field->param1);
@@ -149,7 +149,19 @@ public function dynmenu_add_javascript($dyntype){
       break;
     case 1:
       //Hide/Show field
-      $js .= 'dynmenu_hideShow_field('.$this->field->shortname.', '.$this->options.', '.$childName.');';
+	$js .= "var ".$this->field->shortname."Array=[";
+	$isFirst = true;
+	foreach ($this->options as $op){
+		if(!$isFirst){
+		$js .= ',"'.$op.'"';
+		}
+		else {
+		$js .= '"'.$op.'"';
+		$isFirst = false;
+		}
+	}
+	$js .= "];";
+      $js .= 'var '.$this->field->shortname.'Op = new hideShow('.$this->field->shortname.', '.$this->field->shortname.'Array, '.$childName.');'.$this->field->shortname.'exec();';
       break;
     case 2:
       //Update field
