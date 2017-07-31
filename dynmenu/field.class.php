@@ -46,7 +46,6 @@
     public function __construct($fieldid = 0, $userid = 0) {
         // First call parent constructor.
         parent::__construct($fieldid, $userid);
-        global $CFG;
         // Param 1 for dynmenu type is the options.
         if (isset($this->field->param1)) {
             $options = explode("\n", $this->field->param1);
@@ -70,7 +69,34 @@
                 $this->datakey = $key;
             }
         }
+        addMainScriptToPage();
+
     }
+/**
+ * add the Javascript to the page where needed
+ */
+ public function addMainScriptToPage()
+ {
+   //add javascript to the file
+   if (!isset($CFG->additionalhtmlfooter)) {
+     $CFG->additionalhtmlfooter = '';
+   }
+ $field_wrapper ='#fitem_id_profile_field_';
+ $field_prefix = '#id_profile_field_';
+ $sStart = '<script type="text/javascript">';
+$sEnd = '</script>';
+$CFG->additionalhtmlfooter .= $sStart.$this->dynmenu_add_javascript($fieldType).$sEnd;
+$jsMin = $sStart;
+ $jsMin .= "var _createClass=function(){function a(b,c){for(var e,d=0;d<c.length;d++)e=c[d],e.enumerable=e.enumerable||!1,e.configurable=!0,'value'in e&&(e.writable=!0),Object.defineProperty(b,e.key,e)}return function(b,c,d){return c&&a(b.prototype,c),d&&a(b,d),b}}();function _classCallCheck(a,b){if(!(a instanceof b))throw new TypeError('Cannot call a class as a function')}var ".$field_prefix."='#id_profile_field_',".$field_wrapper."='#fitem_id_profile_field_',hideSho=function(){function";
+ $jsMin .= "a(b,c,d){_classCallCheck(this,a),this.parent=".$field_prefix."+b,this.parentValues=c,this.childrenToShow=d}return _createClass(a,[{key:'exec',value:function exec(){var d=this,b=document.querySelector(this.parent).value,c=getAllIndexes(this.parentValues,b);this.childrenToShow.forEach(function(e){document.querySelector(".$field_wrapper."+e).setAttribute('aria-hidden','true'),document.querySelector(".$field_prefix."+e).value='-1';var f=new";
+ $jsMin .= "Event('change');document.querySelector(".$field_prefix."+e).dispatchEvent(f)}),c.forEach(function(e){document.querySelector(".$field_wrapper."+d.childrenToShow[e]).setAttribute('aria-hidden','false')})}}]),a}(),update=function(){function a(b,c,d,e,f){_classCallCheck(this,a),this.parent=".$field_prefix."+b,this.currentField=".$field_prefix."+c,this.parentValues=d,this.childrenValues=e,this.selectPhrase=f||'Select'}return _createClass(a,[{key:'exec',value:function exec(){var";
+ $jsMin .= "f=this,b=document.querySelector(this.parent).value;if('-1'===b)return!1;var c=getAllIndexes(this.parentValues,b),d=c.map(function(g){return f.childrenValues[g]}),e=document.querySelector(this.currentField);e.innerHTML='<option value=\"-1\">'+this.selectPhrase+'</option>',d.forEach(function(g){var h=document.createElement('option');h.text=g,h.value=g,e.add(h)})}}]),a}();function getAllIndexes(a,b){var d,c=[];for(d=0;d<a.length;d++)a[d]===b&&c.push(d);return c}";
+$jsMin .= $sEnd;
+
+ else if(strpos($CFG->additionalhtmlfooter, $jsMin) === false){
+   $CFG->additionalhtmlfooter .= $jsMin;
+ }
+ }
 
     /**
      * Old syntax of class constructor. Deprecated in PHP7.
