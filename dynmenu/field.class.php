@@ -145,7 +145,46 @@ $jsMin .= $sEnd;
    $CFG->additionalhtmlfooter .= $jsMin;
  }
  }
-
+public function add_JS_arrays_and_exec_call_to_class()
+{
+  switch ($this->fieldType) {
+    case 0:
+    //this is a parent field
+    // TODO: get children and add them to the $CFG->parentChildFields
+      # code...
+      break;
+    case 1:
+    //this is a showhide field
+    // TODO: if this field has children add them to the $CFG->parentChildFields
+      # code...
+      break;
+    case 2:
+    //this is a update field
+      # code...
+      break;
+    case 3:
+    //this is a showhide and update field
+    // TODO:
+      # code...
+      break;
+    default:
+    //This should never be reached
+    // TODO: throw error
+      # code...
+      break;
+  }
+}
+/**
+ * Add the children elements to the $CFG->parentChildFields array
+ */
+ public function add_children_to_parentchildfields()
+ {
+   global $CFG;
+   if (!isset($CFG->parentChildFields)) {
+     $CFG->parentChildFields = array();
+   }
+   $CFG->parentChildFields[$this->field->shortname] = $this->childrenNames;
+ }
     /**
      * Old syntax of class constructor. Deprecated in PHP7.
      *
