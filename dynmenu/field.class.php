@@ -35,6 +35,18 @@
     /** @var int $datakey */
     public $datakey;
 
+    /** @var int $fieldType */
+    public $fieldType;
+
+    /** @var int $childType */
+    public $childType;
+
+    /** @var array $childName */
+    public $childName;
+
+    /** @var array $triggerValues */
+    public $triggerValues;
+
     /**
      * Constructor method.
      *
@@ -60,7 +72,43 @@
             // Multilang formatting with filters.
             $this->options[$option] = format_string($option, true, ['context' => context_system::instance()]);
         }
-
+        // Param 2 for dynmenu is the dynamic Menu field type {integer}
+        if (isset($this->field->param2)) {
+          $fieldType = $this->field->param2;
+        } else {
+          $fieldType = 0;
+        }
+        $this->fieldType = $fieldType;
+        // Param 3 for dynmenu is the child dynamic Menu field type (if applicable) {integer|null}
+        if (isset($this->field->param3)) {
+          $childType = $this->field->param3;
+        }
+        else {
+          $childType = null;
+        }
+        $this->childType = $childType;
+        // Param 4 for dynmenu is the Name(s) of child(ren) field(s) to show {string|Array}
+        if (isset($this->field->param4)) {
+            $childrenNames = explode("\n", $this->field->param4);
+        } else {
+            $childrenNames = array();
+        }
+        $this->childrenNames = array();
+        foreach ($childrenNames as $key => $child) {
+          // Multilang formatting with filters.
+          $this->childrenNames[$child] = format_string($child, true, ['context' => context_system::instance()]);
+        }
+        // Param 5 for dynmenu is the values that trigger changes in the Update Fields {array}
+        if (isset($this->field->param5)) {
+            $triggerValues = explode("\n", $this->field->param5);
+        } else {
+            $triggerValues = array();
+        }
+        $this->triggerValues = array();
+        foreach ($triggerValues as $key => $trigger) {
+          // Multilang formatting with filters.
+          $this->triggerValues[$trigger] = format_string($trigger, true, ['context' => context_system::instance()]);
+        }
         // Set the data key.
         if ($this->data !== null) {
             $key = $this->data;
