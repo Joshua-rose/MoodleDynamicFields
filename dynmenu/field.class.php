@@ -129,7 +129,7 @@ class profile_field_dynmenu extends profile_field_base {
 /**
  * add the Javascript to the page where needed
  */
- public function addMainScriptToPage()
+ private function addMainScriptToPage()
  {
    global $field_prefix, $field_wrapper, $CFG;
    //add javascript to the file
@@ -150,7 +150,7 @@ $jsMin .= $sEnd;
    $CFG->additionalhtmlfooter .= $jsMin;
  }
  }
-public function add_JS_arrays_and_exec_call_to_class()
+private function add_JS_arrays_and_exec_call_to_class()
 {
   $js = '';
   switch ($this->fieldType) {
@@ -177,7 +177,7 @@ public function add_JS_arrays_and_exec_call_to_class()
   $this->add_children_to_parentchildfields();
   return $this->getChildTypeJS()+$js;
 }
-public function updateValueJS()
+private function updateValueJS()
 {
   global $field_prefix, $field_wrapper, $CFG;
   $isFirst = true;
@@ -219,7 +219,7 @@ public function updateValueJS()
 /**
  * checks the child field types to add the proper JavaScript
  */
- public function getChildTypeJS()
+ private function getChildTypeJS()
  {
    $js = '';
    switch ($this->childType) {
@@ -265,7 +265,7 @@ public function updateValueJS()
 /**
  * Add the children elements to the $CFG->parentChildFields array
  */
- public function add_children_to_parentchildfields()
+ private function add_children_to_parentchildfields()
  {
    global $CFG;
    if (!isset($CFG->parentChildFields)) {
