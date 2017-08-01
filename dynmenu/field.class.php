@@ -213,7 +213,7 @@ private function updateValueJS()
     }
     if (isset($parentField)){
       $js .= "var update{$this->field->shortname}_{$parentField} = new update('{$parentField}', '{$this->field->shortname}',tvUP_{$this->field->shortname}, caUP_{$this->field->shortname})\n";
-      $js .= "document.querySelector({$field_prefix} + {$parentField}).addEventListener('change', function () {update{$this->field->shortname}_{$parentField}.exec();});";
+      $js .= "document.querySelector('{$field_prefix}' + {$parentField}).addEventListener('change', function () {update{$this->field->shortname}_{$parentField}.exec();});";
     }
     return $js;
 }
@@ -251,9 +251,9 @@ private function updateValueJS()
          }
        }
        $js .= "];\n";
-       $js .= "var show{$this->field->shortname}Children = new hideShow('{$this->field->shortname}',psHS_{$this->field->shortname}, csHS_{$this->field->shortname})\n";
+       $js .= "var show{$this->field->shortname}Children = new hideShow('{$this->field->shortname}',paHS_{$this->field->shortname}, caHS_{$this->field->shortname})\n";
        $js .= "show{$this->field->shortname}Children.exec()\n";
-       $js .= "document.querySelector({$field_prefix} + '{$this->field->shortname}').addEventListener('change', function () {show{$this->field->shortname}Children.exec();});";
+       $js .= "document.querySelector('{$field_prefix}' + '{$this->field->shortname}').addEventListener('change', function () {show{$this->field->shortname}Children.exec();});";
        break;
      case 2:
 
