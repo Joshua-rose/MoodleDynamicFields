@@ -50,9 +50,9 @@ class profile_field_dynmenu extends profile_field_base {
     public $triggerValues;
 
     /** @var string $field_wrapper */
-    public $field_wrapper ='#fitem_id_profile_field_';
+    public $field_wrapper;
     /** @var string $field_prefix */
-    public $field_prefix = '#id_profile_field_';
+    public $field_prefix;
     /**
      * Constructor method.
      *
@@ -62,8 +62,12 @@ class profile_field_dynmenu extends profile_field_base {
      * @param int $userid
      */
     public function __construct($fieldid = 0, $userid = 0) {
+      global $field_prefix, $field_wrapper;
         // First call parent constructor.
         parent::__construct($fieldid, $userid);
+
+        $field_wrapper ='#fitem_id_profile_field_';
+        $field_prefix = '#id_profile_field_';
         // Param 1 for dynmenu type is the options.
         if (isset($this->field->param1)) {
             $options = explode("\n", $this->field->param1);
@@ -216,7 +220,7 @@ private function updateValueJS()
 /**
  * checks the child field types to add the proper JavaScript
  */
- private function getChildTypeJS() 
+ private function getChildTypeJS()
 {
    global $field_prefix, $field_wrapper;
    $js = '';
