@@ -176,7 +176,7 @@ private function add_JS_arrays_and_exec_call_to_class()
       break;
   }
   $this->add_children_to_parentchildfields();
-  return $this->getChildTypeJS()+$js;
+  return $this->getChildTypeJS().$js;
 }
 private function updateValueJS()
 {
