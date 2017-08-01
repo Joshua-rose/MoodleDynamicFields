@@ -156,23 +156,17 @@ public function add_JS_arrays_and_exec_call_to_class()
   switch ($this->fieldType) {
     case 0:
     //this is a parent field
-    // TODO: Show Hide/Show Children
-      # code...
-      break;
+    //fall through is intended
     case 1:
     //this is a showhide field
-    //code should be handeled by parent
-      # code...
-      break;
+     break;
     case 2:
     //this is a update field
-
-      # code...
-      break;
+    //fall through is intended
     case 3:
-    //this is a showhide and update field
-    // TODO:
-      # code...
+    //this is a hideShow and update field
+    $js .= $this->updateValueJS();
+
       break;
     default:
     //This should never be reached
@@ -182,6 +176,45 @@ public function add_JS_arrays_and_exec_call_to_class()
   }
   $this->add_children_to_parentchildfields();
   return $this->getChildTypeJS()+$js;
+}
+public function updateValueJS()
+{
+  global $field_prefix, $field_wrapper, $CFG;
+  $isFirst = true;
+  $js .= "var tvUP_{$this->field->shortname} = [";
+   foreach ($this->triggerValues as $key => $tv) {
+     if(!$isFirst){
+     $js .= ',"'.$tv.'"';
+     }
+     else {
+     $js .= '"'.$tv.'"';
+     $isFirst = false;
+     }
+   }
+   $js .= "];\n";
+   $isFirst = true;
+   $js .= "var caUP_{$this->field->shortname} = [";
+    foreach ($this->options as $key => $op) {
+      if(!$isFirst){
+      $js .= ',"'.$op.'"';
+      }
+      else {
+      $js .= '"'.$op.'"';
+      $isFirst = false;
+      }
+    }
+    $js .= "];\n";
+    $parentField;
+    foreach ($CFG->parentChildFields as $key => $child) {
+      if (array_search($this->field->shortname,$child)){
+        $parentField = $key;
+      }
+    }
+    if (isset($parentField)){
+      $js .= "var update{$this->field->shortname}_{$parentField} = new update('{$parentField}', '{$this->field->shortname}',tvUP_{$this->field->shortname}, caUP_{$this->field->shortname})\n";
+      $js .= "document.querySelector({$field_prefix} + {$parentField}).addEventListener('change', function () {update{$this->field->shortname}_{$parentField}.exec();});"
+    }
+    return $js;
 }
 /**
  * checks the child field types to add the proper JavaScript
