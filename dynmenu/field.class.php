@@ -256,7 +256,7 @@ $jsMin = $sStart;
  * @see @link{http://stackoverflow.com/questions/20798477}
  */
 
- 
+
  function getAllIndexes(arr, val) {
    var indexes = [],
        i;
@@ -264,7 +264,7 @@ $jsMin = $sStart;
      if (arr[i] === val) indexes.push(i);
    }return indexes;
  }
-minjs
+minjs;
 $jsMin .= $sEnd;
 
  if(strpos($CFG->additionalhtmlfooter, $jsMin) === false){
