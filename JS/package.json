@@ -1,0 +1,23 @@
+{
+  "name": "js",
+  "version": "1.0.0",
+  "description": "JS files for the Moodle Dynamic Menu Field",
+  "main": "ExampleUse.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel js.js -d transpiled"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jrgiant/MoodleDynamicFields/tree/JS/"
+  },
+  "author": "Joshua Rose",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-preset-env": "^1.6.0"
+  }
+}
