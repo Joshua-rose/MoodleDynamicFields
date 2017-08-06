@@ -183,7 +183,7 @@ var hideShow = function () {
       var indexes = getAllIndexes(this.parentValues, currentValue);
       this.childrenToShow.forEach(function (child) {
         var thisChild = document.querySelector(FIELD_WRAPPER + child);
-        if (thisChild.length != null) {
+        if (thisChild != null) {
           thisChild.setAttribute('aria-hidden', 'true');
           thisChild.value = "-1";
           var event = new Event('change');
@@ -191,7 +191,7 @@ var hideShow = function () {
         }
       });
       indexes.forEach(function (i) {
-        document.querySelector(FIELD_WRAPPER + _this.childrenToShow[i]).setAttribute('aria-hidden', 'false');
+       document.querySelector(FIELD_WRAPPER + _this.childrenToShow[i]) && document.querySelector(FIELD_WRAPPER + _this.childrenToShow[i]).setAttribute('aria-hidden', 'false');
       });
     }
   }]);
