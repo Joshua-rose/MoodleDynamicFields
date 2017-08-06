@@ -341,7 +341,7 @@ private function updateValueJS()
     }
     if (isset($parentField)){
       $js .= "var update{$this->field->shortname}_{$parentField} = new update('{$parentField}', '{$this->field->shortname}',tvUP_{$this->field->shortname}, caUP_{$this->field->shortname})\n";
-      $js .= "document.querySelector('{$field_prefix}' + {$parentField}).addEventListener('change', function () {update{$this->field->shortname}_{$parentField}.exec();});";
+      $js .= "document.querySelector('{$field_prefix}' + '{$parentField}').addEventListener('change', function () {update{$this->field->shortname}_{$parentField}.exec();});";
     }
     return $js;
 }
