@@ -185,13 +185,17 @@ var hideShow = function () {
         var thisChild = document.querySelector(FIELD_WRAPPER + child);
         if (thisChild != null) {
           thisChild.setAttribute('aria-hidden', 'true');
+	  thisChild.style.display = "none";
           thisChild.value = "-1";
           var event = new Event('change');
           thisChild.dispatchEvent(event);
         }
       });
       indexes.forEach(function (i) {
-       document.querySelector(FIELD_WRAPPER + _this.childrenToShow[i]) && document.querySelector(FIELD_WRAPPER + _this.childrenToShow[i]).setAttribute('aria-hidden', 'false');
+       if (document.querySelector(FIELD_WRAPPER + _this.childrenToShow[i])){
+	 document.querySelector(FIELD_WRAPPER + _this.childrenToShow[i]).setAttribute('aria-hidden', 'false');
+	document.querySelector(FIELD_WRAPPER + _this.childrenToShow[i]).style.display = "inherit";
+	}
       });
     }
   }]);
